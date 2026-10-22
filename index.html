@@ -31,6 +31,34 @@
             justify-content: center;
             overflow-x: hidden;
             padding: 10px;
+            position: relative;
+        }
+
+        /* --- ABOUT ICON BUTTON (Top Right Corner) --- -->
+        .about-icon-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--panel-bg);
+            border: 1px solid var(--primary-gold);
+            color: var(--primary-gold);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .about-icon-btn:hover {
+            background: var(--primary-gold);
+            color: #12121a;
+            transform: scale(1.05);
         }
 
         /* --- SCREENS --- */
@@ -52,7 +80,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- HOME & MENU DESIGN --- */
         .logo-title {
             font-family: 'Cinzel', serif;
             font-size: 2.8rem;
@@ -123,6 +150,42 @@
             color: white;
         }
 
+        /* --- LEVEL GRID (1 to 100 Levels) --- */
+        .level-grid-container {
+            max-height: 320px;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            padding: 5px;
+        }
+
+        .level-btn {
+            background: #2a2a3d;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: #fff;
+            padding: 12px 0;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .level-btn.unlocked:hover {
+            background: var(--primary-gold);
+            color: #12121a;
+            transform: scale(1.05);
+        }
+
+        .level-btn.locked {
+            background: #15151c;
+            color: #555;
+            border-color: #333;
+            cursor: not-allowed;
+        }
+
         /* --- GAME INTERFACE --- */
         .game-header {
             display: flex;
@@ -147,7 +210,6 @@
             border-radius: 14px;
             border: 2px solid var(--primary-gold);
             box-shadow: 0 15px 35px rgba(0,0,0,0.7);
-            position: relative;
         }
 
         .board {
@@ -172,14 +234,8 @@
         .light { background-color: var(--board-light); color: #222; }
         .dark { background-color: var(--board-dark); color: #222; }
 
-        .square.selected {
-            background-color: #baca44 !important;
-        }
-
-        .square.highlight {
-            position: relative;
-        }
-
+        .square.selected { background-color: #baca44 !important; }
+        .square.highlight { position: relative; }
         .square.highlight::after {
             content: '';
             position: absolute;
@@ -197,35 +253,9 @@
             max-width: 460px;
         }
 
-        .game-controls .btn {
-            flex: 1;
-            padding: 10px;
-            font-size: 0.95rem;
-        }
+        .game-controls .btn { flex: 1; padding: 10px; font-size: 0.95rem; }
 
-        /* --- ABOUT MODAL --- */
-        .about-box {
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: #ddd;
-            text-align: left;
-            background: rgba(0,0,0,0.3);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border-left: 4px solid var(--primary-gold);
-        }
-
-        .about-box p {
-            margin-bottom: 8px;
-        }
-
-        .about-box a {
-            color: var(--primary-gold);
-            text-decoration: none;
-        }
-
-        /* --- HISTORY / INSPECT MODAL --- */
+        /* --- MODALS --- */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -253,6 +283,20 @@
             font-family: 'Cinzel', serif;
         }
 
+        .about-box {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #ddd;
+            text-align: left;
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--primary-gold);
+        }
+        .about-box p { margin-bottom: 8px; }
+        .about-box a { color: var(--primary-gold); text-decoration: none; }
+
         .history-list {
             list-style: none;
             max-height: 250px;
@@ -262,7 +306,6 @@
             border-radius: 6px;
             padding: 10px;
         }
-
         .history-list li {
             padding: 6px 10px;
             border-bottom: 1px solid rgba(255,255,255,0.05);
@@ -282,13 +325,14 @@
 </head>
 <body>
 
-    <!-- 1. MAIN HOME SCREEN -->
+    <!-- SMALL ABOUT ICON BUTTON (Top Right Corner) -->
+    <div class="about-icon-btn" onclick="showScreen('about-screen')" title="About Developer">ℹ</div>
+        <!-- 1. MAIN HOME SCREEN -->
     <div id="home-screen" class="screen active">
         <h1 class="logo-title">GRANDMASTER</h1>
         <div class="subtitle">Ultimate Chess Experience</div>
         <div class="menu-card">
             <button class="btn btn-gold" onclick="showScreen('mode-screen')">Play Game</button>
-            <button class="btn" onclick="showScreen('about-screen')">About Developer</button>
         </div>
     </div>
 
@@ -306,16 +350,28 @@
     <!-- 3. DIFFICULTY SELECT SCREEN -->
     <div id="difficulty-screen" class="screen">
         <h1 class="logo-title" style="font-size: 2rem;">AI DIFFICULTY</h1>
-        <div class="subtitle">Test your tactical skills</div>
+        <div class="subtitle">Select tactical level</div>
         <div class="menu-card">
-            <button class="btn" onclick="startAIGame('easy')">Easy Level</button>
-            <button class="btn btn-gold" onclick="startAIGame('medium')">Medium Level</button>
-            <button class="btn btn-danger" onclick="startAIGame('hard')">Hard Level</button>
+            <button class="btn" onclick="openLevelSelect('easy')">Easy Mode</button>
+            <button class="btn btn-gold" onclick="openLevelSelect('medium')">Medium Mode</button>
+            <button class="btn btn-danger" onclick="openLevelSelect('hard')">Hard / Pro Mode</button>
             <button class="btn" onclick="showScreen('mode-screen')">Back</button>
         </div>
     </div>
 
-    <!-- 4. ABOUT SCREEN -->
+    <!-- 4. 100 LEVELS SELECT SCREEN -->
+    <div id="level-screen" class="screen">
+        <h1 class="logo-title" id="level-screen-title" style="font-size: 1.8rem;">SELECT LEVEL</h1>
+        <div class="subtitle">Complete level to unlock next</div>
+        <div class="menu-card">
+            <div class="level-grid-container" id="level-grid">
+                <!-- 100 levels populated dynamically -->
+            </div>
+            <button class="btn" style="margin-top: 10px;" onclick="showScreen('difficulty-screen')">Back</button>
+        </div>
+    </div>
+
+    <!-- 5. ABOUT SCREEN -->
     <div id="about-screen" class="screen">
         <h1 class="logo-title" style="font-size: 2rem;">ABOUT</h1>
         <div class="subtitle">Creator Information</div>
@@ -324,13 +380,13 @@
                 <p><strong>Developer & Founder:</strong> Subhash Yadav</p>
                 <p><strong>Instagram ID:</strong> <a href="https://instagram.com/iamsubhash177" target="_blank">@iamsubhash177</a></p>
                 <p><strong>Email:</strong> <a href="mailto:yahu9950@gmail.com">yahu9950@gmail.com</a></p>
-                <p style="margin-top: 10px; font-size: 0.85rem; color: #aaa;">This chess application is crafted with professional styling, smart AI difficulties, and immersive sound feedback.</p>
+                <p style="margin-top: 10px; font-size: 0.85rem; color: #aaa;">Pro chess web application with 100 progressive campaign levels per mode.</p>
             </div>
             <button class="btn" onclick="showScreen('home-screen')">Back to Home</button>
         </div>
     </div>
 
-    <!-- 5. IN-GAME SCREEN -->
+    <!-- 6. IN-GAME SCREEN -->
     <div id="game-screen" class="screen">
         <div class="game-header">
             <div class="status-badge" id="turn-info">White's Turn</div>
@@ -359,18 +415,16 @@
         </div>
     </div>
 
-    <!-- INSPECT HISTORY MODAL (No step back, view previous board element positions) -->
+    <!-- INSPECT HISTORY MODAL -->
     <div class="modal-overlay" id="inspect-modal">
         <div class="modal-content">
             <h3>Move History & Positions</h3>
-            <ul class="history-list" id="history-list">
-                <!-- History items appended here -->
-            </ul>
+            <ul class="history-list" id="history-list"></ul>
             <button class="btn btn-gold" style="width: 100%;" onclick="closeInspectModal()">Close</button>
         </div>
     </div>
 
-    <!-- AUDIO SYNTHESIZER (Web Audio API for Took-Took & Funny Captures) -->
+    <!-- AUDIO & LOGIC SCRIPT -->
     <script>
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -391,7 +445,6 @@
 
         function playFunnyCaptureSound() {
             if (audioCtx.state === 'suspended') { audioCtx.resume(); }
-            // Fun sliding multi-tone pitch for piece captures
             const now = audioCtx.currentTime;
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
@@ -408,7 +461,6 @@
         }
     </script>
 
-    <!-- GAME LOGIC SCRIPT -->
     <script>
         const PIECES = {
             'r': '♜', 'n': '♞', 'b': '♝', 'q': '♛', 'k': '♚', 'p': '♟',
@@ -417,8 +469,17 @@
 
         let board = [];
         let turn = 'w';
-        let gameMode = 'offline'; // 'offline' or 'ai'
-        let aiDifficulty = 'medium'; // 'easy', 'medium', 'hard'
+        let gameMode = 'offline'; 
+        let aiDifficulty = 'medium'; 
+        let currentLevel = 1;
+        
+        // Progress storage for 100 levels per mode
+        let unlockedLevels = {
+            easy: 1,
+            medium: 1,
+            hard: 1
+        };
+
         let selectedSquare = null;
         let validMoves = [];
         let moveHistory = [];
@@ -426,6 +487,29 @@
         function showScreen(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
+        }
+
+        function openLevelSelect(diff) {
+            aiDifficulty = diff;
+            document.getElementById('level-screen-title').textContent = `${diff.toUpperCase()} - 100 LEVELS`;
+            const grid = document.getElementById('level-grid');
+            grid.innerHTML = '';
+
+            const maxUnlocked = unlockedLevels[diff];
+
+            for (let i = 1; i <= 100; i++) {
+                const btn = document.createElement('button');
+                btn.textContent = i;
+                if (i <= maxUnlocked) {
+                    btn.className = 'level-btn unlocked';
+                    btn.onclick = () => startAIGameWithLevel(diff, i);
+                } else {
+                    btn.className = 'level-btn locked';
+                    btn.title = 'Locked Level';
+                }
+                grid.appendChild(btn);
+            }
+            showScreen('level-screen');
         }
 
         function initBoardState() {
@@ -449,10 +533,11 @@
             renderBoard();
         }
 
-        function startAIGame(level) {
+        function startAIGameWithLevel(diff, level) {
             gameMode = 'ai';
-            aiDifficulty = level;
-            document.getElementById('mode-badge').textContent = `AI Mode (${level.toUpperCase()})`;
+            aiDifficulty = diff;
+            currentLevel = level;
+            document.getElementById('mode-badge').textContent = `${diff.toUpperCase()} Lvl ${level}`;
             resetGameData();
             showScreen('game-screen');
             renderBoard();
@@ -528,7 +613,7 @@
         }
 
         function handleSquareClick(r, c) {
-            if (gameMode === 'ai' && turn === 'b') return; // Wait for AI
+            if (gameMode === 'ai' && turn === 'b') return;
 
             const piece = board[r][c];
             const isWhitePiece = piece && piece === piece.toUpperCase();
@@ -562,14 +647,22 @@
             const movingPiece = board[fromR][fromC];
             const targetPiece = board[toR][toC];
 
-            // Audio feedback
             if (targetPiece) {
                 playFunnyCaptureSound();
+                // Check if King is captured (Win condition simulation)
+                if (targetPiece.toLowerCase() === 'k') {
+                    setTimeout(() => {
+                        alert(`Victory! You cleared Level ${currentLevel} in ${aiDifficulty.toUpperCase()} mode.`);
+                        if (gameMode === 'ai' && currentLevel === unlockedLevels[aiDifficulty] && currentLevel < 100) {
+                            unlockedLevels[aiDifficulty]++;
+                        }
+                        showScreen('difficulty-screen');
+                    }, 200);
+                }
             } else {
                 playTookSound();
             }
 
-            // Record history (No step-back feature as requested, but log for inspection)
             moveHistory.push({
                 player: turn,
                 piece: movingPiece,
@@ -578,11 +671,9 @@
                 captured: targetPiece
             });
 
-            // Move piece
             board[toR][toC] = movingPiece;
             board[fromR][fromC] = '';
 
-            // Turn switch
             turn = turn === 'w' ? 'b' : 'w';
             document.getElementById('turn-info').textContent = `${turn === 'w' ? "White's" : "Black's"} Turn`;
 
@@ -590,13 +681,11 @@
             validMoves = [];
             renderBoard();
 
-            // AI Move trigger
             if (gameMode === 'ai' && turn === 'b') {
                 setTimeout(makeAIMove, 400);
             }
         }
 
-        /* --- BASIC CHESS RULES & VALID MOVES --- */
         function getValidMoves(r, c) {
             const piece = board[r][c];
             const moves = [];
@@ -659,13 +748,12 @@
             return moves;
         }
 
-        /* --- AI LOGIC (Easy, Medium, Hard) --- */
         function makeAIMove() {
             let allMoves = [];
             for (let r = 0; r < 8; r++) {
                 for (let c = 0; c < 8; c++) {
                     const p = board[r][c];
-                    if (p && p === p.toLowerCase()) { // Black pieces
+                    if (p && p === p.toLowerCase()) {
                         const vm = getValidMoves(r, c);
                         vm.forEach(m => allMoves.push({ from: { r, c }, to: m, target: board[m.r][m.c] }));
                     }
@@ -677,10 +765,8 @@
             let chosenMove = null;
 
             if (aiDifficulty === 'easy') {
-                // Random move
                 chosenMove = allMoves[Math.floor(Math.random() * allMoves.length)];
             } else if (aiDifficulty === 'medium') {
-                // Prioritize captures if available, otherwise random
                 const captures = allMoves.filter(m => m.target);
                 if (captures.length > 0 && Math.random() < 0.7) {
                     chosenMove = captures[Math.floor(Math.random() * captures.length)];
@@ -688,7 +774,6 @@
                     chosenMove = allMoves[Math.floor(Math.random() * allMoves.length)];
                 }
             } else if (aiDifficulty === 'hard') {
-                // Prioritize high value captures (Queen, Rook, Bishop/Knight), else random
                 const pieceValue = { 'Q': 9, 'R': 5, 'B': 3, 'N': 3, 'P': 1 };
                 let bestScore = -1;
                 let bestMoves = [];
@@ -716,4 +801,3 @@
     </script>
 </body>
 </html>
-              
