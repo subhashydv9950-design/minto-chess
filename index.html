@@ -94,12 +94,6 @@
             border-radius: 50%;
         }
 
-        .captured-container {
-            margin-top: 15px;
-            font-size: 1rem;
-            color: #bbb;
-        }
-
         .btn-reset {
             margin-top: 15px;
             background-color: #e74c3c;
@@ -205,11 +199,9 @@
                     selectedSquare = null;
                     validMoves = [];
                 } else if (validMoves.some(m => m.r === r && m.c === c)) {
-                    // Move piece
                     board[r][c] = board[selectedSquare.row][selectedSquare.col];
                     board[selectedSquare.row][selectedSquare.col] = '';
                     
-                    // Turn switch
                     turn = turn === 'w' ? 'b' : 'w';
                     turnInfoElement.textContent = `Turn: ${turn === 'w' ? "White's Move" : "Black's Move"}`;
 
@@ -254,15 +246,12 @@
                 const dir = isWhite ? -1 : 1;
                 const startRow = isWhite ? 6 : 1;
 
-                // Forward 1
                 if (r + dir >= 0 && r + dir < 8 && !board[r + dir][c]) {
                     moves.push({ r: r + dir, c: c });
-                    // Forward 2 from start
                     if (r === startRow && !board[r + 2 * dir][c]) {
                         moves.push({ r: r + 2 * dir, c: c });
                     }
                 }
-                // Captures
                 for (let dc of [-1, 1]) {
                     const nr = r + dir, nc = c + dc;
                     if (nr >= 0 && nr < 8 && nc >= 0 && nc < 8) {
